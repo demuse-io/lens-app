@@ -7,6 +7,15 @@ export const client = createClient({
   url: API_URL,
 });
 
+export const authorizedClient = (token) => createClient({
+	url: API_URL,
+	fetchOptions: {
+		headers: {
+		  Authorization: token,
+		  Accept: 'application/vnd.github.packages-preview+json',
+		},
+	}
+  });
 // Get the recommended profiles
 export const getProfiles = `
 query RecommendedProfiles {
@@ -211,8 +220,7 @@ export const challenge = (address) => `query Challenge {
 	  text
 	}
   }
-  `
-
+  `	
 export const login = (address, signature) => `mutation Authenticate {
 	authenticate(request: {
 	  address: "${address}",
@@ -223,13 +231,12 @@ export const login = (address, signature) => `mutation Authenticate {
 	}
   }  
 `;
-
-export const publish = () => `mutation CreatePostTypedData {
+export const publish = (profileId, contentURI) => `mutation CreatePostTypedData {
 	createPostTypedData(request: {
-	  profileId: "0x03",
-	  contentURI: "ipfs://QmPogtffEF3oAbKERsoR4Ky8aTvLgBF5totp5AuF8YN6vl",
+	  profileId: "${profileId}",
+	  contentURI: "${contentURI}",
 	  collectModule: {
-		revertCollectModule: tru
+		revertCollectModule: true
 	  },
 	  referenceModule: {
 		followerOnlyReferenceModule: false
@@ -261,6 +268,81 @@ export const publish = () => `mutation CreatePostTypedData {
 		  referenceModuleInitData
 		}
 	  }
+	}
+  }
+`;
+
+export const hasTransactionBeenIndexed = (txHash) => `query HasTxHashBeenIndexed {
+	hasTxHashBeenIndexed(request: { txHash: "${txHash}" }) {
+	  ... on TransactionIndexedResult {
+		indexed
+		txReceipt {
+		  to
+		  from
+		  contractAddress
+		  transactionIndex
+		  root
+		  gasUsed
+		  logsBloom
+		  blockHash
+		  transactionHash
+		  blockNumber
+		  confirmations
+		  cumulativeGasUsed
+		  effectiveGasPrice
+		  byzantium
+		  type
+		  status
+		  logs {
+			blockNumber
+			blockHash
+			transactionIndex
+			removed
+			address
+			data
+			topics
+			transactionHash
+			logIndex
+		  }
+		}
+		metadataStatus {
+		  status
+		  reason
+		}
+	  }
+	  ... on TransactionError {
+		reason
+		txReceipt {
+		  to
+		  from
+		  contractAddress
+		  transactionIndex
+		  root
+		  gasUsed
+		  logsBloom
+		  blockHash
+		  transactionHash
+		  blockNumber
+		  confirmations
+		  cumulativeGasUsed
+		  effectiveGasPrice
+		  byzantium
+		  type
+		  status
+		  logs {
+			blockNumber
+			blockHash
+			transactionIndex
+			removed
+			address
+			data
+			topics
+			transactionHash
+			logIndex
+		  }
+		}
+	  },
+	  __typename
 	}
   }
 `;

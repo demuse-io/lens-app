@@ -1,0 +1,12 @@
+{
+  "version": "2.0.0",
+  "mainContentFocus": "TEXT_ONLY",
+  "metadata_id": "b9254eb7-a95d-48e4-a2d4-6caf27b6ace1",
+  "description": "I want to make money out of my music :( :(",
+  "locale": "en-US",
+  "content": "Content",
+  "name": "Name",
+  "attributes": [],
+  "tags": ["demuse_post"],
+  "appId": "api_examples_github"
+}
